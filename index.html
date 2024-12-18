@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulário de Etapas, Subetapas e Critérios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-weight: normal;
+            margin-top: 0;
+        }
+
+        fieldset {
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        legend {
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-right: 10px;
+            padding: 8px 12px;
+            background: #0066CC;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #005CB8;
+        }
+
+        .subsection,
+        .criteria-group {
+            margin-top: 20px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+
+        .remove-button {
+            background: #cc0000 !important;
+        }
+
+        .inline-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .inline-group label {
+            margin-bottom: 0;
+        }
+    </style>
+    <script>
+        function addEtapa() {
+            const etapasContainer = document.getElementById('etapas-container');
+
+            const etapaFieldset = document.createElement('fieldset');
+            etapaFieldset.className = 'etapa';
+
+            etapaFieldset.innerHTML = `
+            <legend>Etapa</legend>
+            <label>Título da Etapa</label>
+            <input type="text" name="etapa_titulo[]" placeholder="Título da etapa">
+
+            <label>Descrição da Etapa (opcional)</label>
+            <textarea name="etapa_descricao[]" placeholder="Descrição visível ao aluno"></textarea>
+
+            <label>Valor em Pontos da Etapa</label>
+            <input type="number" step="0.1" name="etapa_valor[]" placeholder="Valor total em pontos desta etapa">
+
+            <label>Prazo de Submissão da Etapa</label>
+            <input type="date" name="etapa_prazo[]" placeholder="Data limite">
+
+            <div class="subetapas-container"></div>
+            <button type="button" onclick="addSubetapa(this)">Adicionar Subetapa</button>
+            <button type="button" class="remove-button" onclick="this.parentNode.remove()">Remover Etapa</button>
+        `;
+
+            etapasContainer.appendChild(etapaFieldset);
+        }
+
+        function addSubetapa(button) {
+            const parent = button.parentNode;
+            const container = parent.querySelector('.subetapas-container');
+
+            const subetapaDiv = document.createElement('div');
+            subetapaDiv.className = 'subsection';
+
+            subetapaDiv.innerHTML = `
+            <h3>Subetapa</h3>
+            <label>Descrição detalhada dos objetivos gerais da Subetapa</label>
+            <textarea name="subetapa_objetivos[]" placeholder="Descrição detalhada dos objetivos gerais"></textarea>
+
+            <label>Valor em Pontos da Subetapa</label>
+            <input type="number" step="0.1" name="subetapa_valor[]" placeholder="Valor em pontos desta subetapa (deve somar ao total da etapa)">
+
+            <div class="criterios-container"></div>
+            <button type="button" onclick="addCriterio(this)">Adicionar Critério</button>
+            <button type="button" class="remove-button" onclick="this.parentNode.remove()">Remover Subetapa</button>
+        `;
+
+            container.appendChild(subetapaDiv);
+        }
+
+        function addCriterio(button) {
+            const parent = button.parentNode;
+            const container = parent.querySelector('.criterios-container');
+
+            const criterioDiv = document.createElement('div');
+            criterioDiv.className = 'criteria-group';
+
+            criterioDiv.innerHTML = `
+            <h4>Critério de Avaliação</h4>
+            <label>Descrição específica do critério</label>
+            <textarea name="criterio_descricao[]" placeholder="Descrição específica do critério"></textarea>
+
+            <label>Excelente ou acima do esperado</label>
+            <textarea name="criterio_excelente[]" placeholder="Exemplos de respostas excelentes"></textarea>
+
+            <label>Bom ou acima do esperado</label>
+            <textarea name="criterio_bom[]" placeholder="Exemplos de respostas boas"></textarea>
+
+            <label>Mediano ou aceitável</label>
+            <textarea name="criterio_mediano[]" placeholder="Exemplos de respostas medianas"></textarea>
+
+            <label>Abaixo do esperado</label>
+            <textarea name="criterio_abaixo[]" placeholder="Exemplos de respostas abaixo do esperado"></textarea>
+
+            <label>Muito abaixo do esperado</label>
+            <textarea name="criterio_muito_abaixo[]" placeholder="Exemplos de respostas muito abaixo do esperado"></textarea>
+
+            <button type="button" class="remove-button" onclick="this.parentNode.remove()">Remover Critério</button>
+        `;
+
+            container.appendChild(criterioDiv);
+        }
+
+        function salvarComoMarkdown() {
+            const form = document.querySelector('form');
+            // Extrair dados
+            const objetivoResultados = form.querySelector('[name="objetivo_resultados"]').value.trim();
+            const audienciaAlvo = form.querySelector('[name="audiencia_alvo"]').value.trim();
+            const workflowAssociado = form.querySelector('[name="workflow_associado"]').value.trim();
+
+            let md = `# Informações Gerais do Trabalho\n\n`;
+            md += `**Objetivo dos Resultados:**\n${objetivoResultados}\n\n`;
+            md += `**Audiência Alvo:**\n${audienciaAlvo}\n\n`;
+            md += `**Workflow Associado:**\n${workflowAssociado}\n\n`;
+
+            const etapas = form.querySelectorAll('.etapa');
+            etapas.forEach((etapa, i) => {
+                const titulo = etapa.querySelector('[name="etapa_titulo[]"]').value.trim();
+                const descricao = etapa.querySelector('[name="etapa_descricao[]"]').value.trim();
+                const valor = etapa.querySelector('[name="etapa_valor[]"]').value.trim();
+                const prazo = etapa.querySelector('[name="etapa_prazo[]"]').value.trim();
+
+                md += `\n## Etapa ${i + 1}\n\n`;
+                md += `**Título:** ${titulo}\n\n`;
+                md += `**Descrição:** ${descricao}\n\n`;
+                md += `**Valor em Pontos:** ${valor}\n\n`;
+                md += `**Prazo de Submissão:** ${prazo}\n\n`;
+
+                const subetapas = etapa.querySelectorAll('.subsection');
+                subetapas.forEach((subetapa, j) => {
+                    const obj = subetapa.querySelector('[name="subetapa_objetivos[]"]').value.trim();
+                    const valorSub = subetapa.querySelector('[name="subetapa_valor[]"]').value.trim();
+
+                    md += `### Subetapa ${j + 1}\n\n`;
+                    md += `**Objetivos Gerais:**\n${obj}\n\n`;
+                    md += `**Valor em Pontos da Subetapa:** ${valorSub}\n\n`;
+
+                    const criterios = subetapa.querySelectorAll('.criteria-group');
+                    criterios.forEach((criterio, k) => {
+                        const desc = criterio.querySelector('[name="criterio_descricao[]"]').value.trim();
+                        const exc = criterio.querySelector('[name="criterio_excelente[]"]').value.trim();
+                        const bom = criterio.querySelector('[name="criterio_bom[]"]').value.trim();
+                        const med = criterio.querySelector('[name="criterio_mediano[]"]').value.trim();
+                        const aba = criterio.querySelector('[name="criterio_abaixo[]"]').value.trim();
+                        const mab = criterio.querySelector('[name="criterio_muito_abaixo[]"]').value.trim();
+
+                        md += `#### Critério ${k + 1}\n\n`;
+                        md += `**Descrição:**\n${desc}\n\n`;
+                        md += `**Excelente ou acima do esperado:**\n${exc}\n\n`;
+                        md += `**Bom ou acima do esperado:**\n${bom}\n\n`;
+                        md += `**Mediano ou aceitável:**\n${med}\n\n`;
+                        md += `**Abaixo do esperado:**\n${aba}\n\n`;
+                        md += `**Muito abaixo do esperado:**\n${mab}\n\n`;
+                    });
+                });
+            });
+
+            // Cria um arquivo blob para download
+            const blob = new Blob([md], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'formulario.md';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Formulário de Etapas, Subetapas e Critérios</h1>
+        <form action="#" method="POST">
+            <fieldset>
+                <legend>Informações Gerais do Trabalho</legend>
+                <label>Objetivo dos Resultados</label>
+                <textarea name="objetivo_resultados"
+                    placeholder="Esclarecer para que os resultados serão utilizados"></textarea>
+
+                <label>Audiência Alvo</label>
+                <textarea name="audiencia_alvo"
+                    placeholder="Definir a audiência para a qual a saída é destinada"></textarea>
+
+                <label>Workflow Associado</label>
+                <textarea name="workflow_associado"
+                    placeholder="Especificar a qual workflow a tarefa faz parte e onde se encaixa"></textarea>
+            </fieldset>
+
+            <div id="etapas-container"></div>
+            <button type="button" onclick="addEtapa()">Adicionar Etapa</button>
+
+            <hr />
+            <button type="button" onclick="salvarComoMarkdown()">Salvar como Markdown</button>
+        </form>
+    </div>
+</body>
+
+</html>
