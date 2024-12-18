@@ -116,21 +116,21 @@
             etapaFieldset.className = 'etapa';
 
             etapaFieldset.innerHTML = `
-            <legend>Etapa</legend>
-            <label>Título da Etapa</label>
+            <legend>Etapa (ou Seção)</legend>
+            <label>Título da Etapa (ou Seção)</label>
             <input type="text" name="etapa_titulo[]" placeholder="Título da etapa">
 
-            <label>Descrição da Etapa</label>
+            <label>Descrição da Etapa (ou Seção)</label>
             <textarea name="etapa_descricao[]" rows="6" placeholder="Descrição e objetivos gerais"></textarea>
 
-            <label>Valor em Pontos da Etapa</label>
+            <label>Valor em Pontos da Etapa (ou Seção)</label>
             <input type="number" step="0.1" name="etapa_valor[]" placeholder="Valor total em pontos desta etapa">
 
-            <label>Prazo de Submissão da Etapa</label>
+            <label>Prazo de Submissão da Etapa (ou Seção)</label>
             <input type="date" name="etapa_prazo[]" placeholder="Data limite">
 
             <div class="subetapas-container"></div>
-            <button type="button" onclick="addSubetapa(this)">Adicionar Subetapa</button>
+            <button type="button" onclick="addSubetapa(this)">Adicionar Subetapa (ou Subseção)</button>
             <button type="button" class="remove-button" onclick="this.parentNode.remove()">Remover Etapa</button>
         `;
 
@@ -145,8 +145,8 @@
             subetapaDiv.className = 'subsection';
 
             subetapaDiv.innerHTML = `
-            <h3>Subetapa</h3>
-            <label>Título da Subetapa</label>
+            <h3>Subetapa (ou Subseção)</h3>
+            <label>Título da Subetapa (ou Subseção)</label>
             <input type="text" name="subetapa_titulo[]" placeholder="Título da subetapa">
 
             <label>Descrição detalhada dos objetivos gerais da Subetapa</label>
@@ -285,7 +285,7 @@
             </fieldset>
 
             <div id="etapas-container"></div>
-            <button type="button" onclick="addEtapa()">Adicionar Etapa</button>
+            <button type="button" onclick="addEtapa()">Adicionar Etapa (ou Seção)</button>
 
             <hr />
             <button type="button" onclick="salvarComoMarkdown()">Salvar</button>
