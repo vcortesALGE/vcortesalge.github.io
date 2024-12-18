@@ -155,6 +155,8 @@
             <label>Valor em Pontos da Subetapa</label>
             <input type="number" step="0.1" name="subetapa_valor[]" placeholder="Valor em pontos desta subetapa (deve somar ao total da etapa)">
 
+            <label><input type="checkbox" name="subetapa_anexos[]"> Permitir envio de anexos (imagens e vídeos)</label>
+
             <div class="criterios-container"></div>
             <button type="button" onclick="addCriterio(this)">Adicionar Critério</button>
             <button type="button" class="remove-button" onclick="this.parentNode.remove()">Remover Subetapa</button>
@@ -176,19 +178,19 @@
             <textarea name="criterio_descricao[]" rows="6" placeholder="Descrição específica do critério"></textarea>
 
             <label>Excelente ou acima do esperado</label>
-            <textarea name="criterio_excelente[]" rows="6" placeholder="Exemplos de respostas excelentes e justificativa para que tenham recebido essa classificação"></textarea>
+            <textarea name="criterio_excelente[]" rows="6" placeholder="Exemplos de respostas excelentes"></textarea>
 
             <label>Bom ou acima do esperado</label>
-            <textarea name="criterio_bom[]" rows="6" placeholder="Exemplos de respostas boas e justificativa para que tenham recebido essa classificação"></textarea>
+            <textarea name="criterio_bom[]" rows="6" placeholder="Exemplos de respostas boas"></textarea>
 
             <label>Mediano ou aceitável</label>
-            <textarea name="criterio_mediano[]" rows="6" placeholder="Exemplos de respostas medianas e justificativa para que tenham recebido essa classificação"></textarea>
+            <textarea name="criterio_mediano[]" rows="6" placeholder="Exemplos de respostas medianas"></textarea>
 
             <label>Abaixo do esperado</label>
-            <textarea name="criterio_abaixo[]" rows="6" placeholder="Exemplos de respostas abaixo do esperado e justificativa para que tenham recebido essa classificação"></textarea>
+            <textarea name="criterio_abaixo[]" rows="6" placeholder="Exemplos de respostas abaixo do esperado"></textarea>
 
             <label>Muito abaixo do esperado</label>
-            <textarea name="criterio_muito_abaixo[]" rows="6" placeholder="Exemplos de respostas muito abaixo do esperado e justificativa para que tenham recebido essa classificação"></textarea>
+            <textarea name="criterio_muito_abaixo[]" rows="6" placeholder="Exemplos de respostas muito abaixo do esperado"></textarea>
 
             <button type="button" class="remove-button" onclick="this.parentNode.remove()">Remover Critério</button>
         `;
@@ -226,11 +228,13 @@
                     const subtitulo = subetapa.querySelector('[name="subetapa_titulo[]"]').value.trim();
                     const obj = subetapa.querySelector('[name="subetapa_objetivos[]"]').value.trim();
                     const valorSub = subetapa.querySelector('[name="subetapa_valor[]"]').value.trim();
+                    const anexosPermitidos = subetapa.querySelector('[name="subetapa_anexos[]"]').checked;
 
                     md += `### Subetapa ${j + 1}\n\n`;
                     md += `**Título da Subetapa:** ${subtitulo}\n\n`;
                     md += `**Objetivos Gerais:**\n${obj}\n\n`;
                     md += `**Valor em Pontos da Subetapa:** ${valorSub}\n\n`;
+                    md += `**Permitir envio de anexos (imagens e vídeos):** ${anexosPermitidos ? "[X]" : "[ ]"}\n\n`;
 
                     const criterios = subetapa.querySelectorAll('.criteria-group');
                     criterios.forEach((criterio, k) => {
@@ -252,7 +256,6 @@
                 });
             });
 
-            // Cria um arquivo blob para download
             const blob = new Blob([md], { type: 'text/markdown' });
             const url = URL.createObjectURL(blob);
 
@@ -283,16 +286,13 @@
                 <input type="text" name="nome_disciplina" placeholder="Ex: Introdução à Programação">
 
                 <label>Objetivo dos Resultados</label>
-                <textarea name="objetivo_resultados" rows="6"
-                    placeholder="Esclarecer para que atividade será utilizada"></textarea>
+                <textarea name="objetivo_resultados" rows="6" placeholder="Esclarecer para que atividade será utilizada"></textarea>
 
                 <label>Audiência Alvo</label>
-                <textarea name="audiencia_alvo" rows="6"
-                    placeholder="Definir a audiência que realizará a atividade"></textarea>
+                <textarea name="audiencia_alvo" rows="6" placeholder="Definir a audiência que realizará a atividade"></textarea>
 
                 <label>Workflow Associado</label>
-                <textarea name="workflow_associado" rows="6"
-                    placeholder="Especificar a qual workflow a tarefa faz parte e onde se encaixa"></textarea>
+                <textarea name="workflow_associado" rows="6" placeholder="Especificar a qual workflow a tarefa faz parte e onde se encaixa"></textarea>
             </fieldset>
 
             <div id="etapas-container"></div>
