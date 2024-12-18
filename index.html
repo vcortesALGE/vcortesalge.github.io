@@ -198,12 +198,12 @@
 
         function salvarComoMarkdown() {
             const form = document.querySelector('form');
-            // Extrair dados
+            const nomeDisciplina = form.querySelector('[name="nome_disciplina"]').value.trim();
             const objetivoResultados = form.querySelector('[name="objetivo_resultados"]').value.trim();
             const audienciaAlvo = form.querySelector('[name="audiencia_alvo"]').value.trim();
             const workflowAssociado = form.querySelector('[name="workflow_associado"]').value.trim();
 
-            let md = `# Informações Gerais do Trabalho\n\n`;
+            let md = `# ${nomeDisciplina}\n\n`;
             md += `**Objetivo da Atividade:**\n${objetivoResultados}\n\n`;
             md += `**Audiência Alvo:**\n${audienciaAlvo}\n\n`;
             md += `**Workflow Associado:**\n${workflowAssociado}\n\n`;
@@ -268,9 +268,20 @@
 <body>
     <div class="container">
         <h1>Critérios de Avaliação</h1>
+        <p>
+            Nesta página, você deve detalhar o trabalho, definindo uma ou mais etapas (ou seções), e cada etapa pode ter
+            uma ou mais subetapas (ou subseções). Em cada subetapa, podem ser definidos um ou mais critérios de
+            avaliação.
+            Certifique-se de que a soma dos valores das subetapas seja igual ao valor total da etapa, e que a soma dos
+            valores das etapas represente corretamente o trabalho como um todo. Quanto maior for o número de critérios,
+            mais detalhada será a avaliação.
+        </p>
         <form action="#" method="POST">
             <fieldset>
                 <legend>Informações Gerais do Trabalho</legend>
+                <label>Nome da disciplina ou trabalho</label>
+                <input type="text" name="nome_disciplina" placeholder="Ex: Introdução à Programação">
+
                 <label>Objetivo dos Resultados</label>
                 <textarea name="objetivo_resultados" rows="6"
                     placeholder="Esclarecer para que atividade será utilizada"></textarea>
