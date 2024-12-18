@@ -4,22 +4,25 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Formulário de Etapas, Subetapas e Critérios</title>
+    <title>Critérios de Avaliação</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f0f0f0;
+            background: #e9ecef;
             margin: 0;
             padding: 0;
+            color: #333;
         }
 
         .container {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 20px auto;
             background: #fff;
             padding: 20px;
             box-sizing: border-box;
             border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
         h1,
@@ -28,12 +31,15 @@
         h4 {
             font-weight: normal;
             margin-top: 0;
+            color: #333;
         }
 
         fieldset {
             border: 1px solid #ccc;
             margin-bottom: 20px;
             padding: 20px;
+            border-radius: 6px;
+            background: #fdfdfd;
         }
 
         legend {
@@ -44,6 +50,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
+            color: #333;
         }
 
         input[type="text"],
@@ -54,6 +61,14 @@
             padding: 8px;
             margin-bottom: 20px;
             box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
         }
 
         button {
@@ -63,6 +78,8 @@
             color: #fff;
             border: none;
             cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
         }
 
         button:hover {
@@ -75,6 +92,7 @@
             background: #fafafa;
             border: 1px solid #ddd;
             padding: 20px;
+            border-radius: 6px;
         }
 
         .remove-button {
@@ -102,8 +120,8 @@
             <label>Título da Etapa</label>
             <input type="text" name="etapa_titulo[]" placeholder="Título da etapa">
 
-            <label>Descrição da Etapa (opcional)</label>
-            <textarea name="etapa_descricao[]" placeholder="Descrição visível ao aluno"></textarea>
+            <label>Descrição da Etapa</label>
+            <textarea name="etapa_descricao[]" rows="6" placeholder="Descrição e objetivos gerais"></textarea>
 
             <label>Valor em Pontos da Etapa</label>
             <input type="number" step="0.1" name="etapa_valor[]" placeholder="Valor total em pontos desta etapa">
@@ -128,8 +146,11 @@
 
             subetapaDiv.innerHTML = `
             <h3>Subetapa</h3>
+            <label>Título da Subetapa</label>
+            <input type="text" name="subetapa_titulo[]" placeholder="Título da subetapa">
+
             <label>Descrição detalhada dos objetivos gerais da Subetapa</label>
-            <textarea name="subetapa_objetivos[]" placeholder="Descrição detalhada dos objetivos gerais"></textarea>
+            <textarea name="subetapa_objetivos[]" rows="6" placeholder="Descrição detalhada dos objetivos gerais"></textarea>
 
             <label>Valor em Pontos da Subetapa</label>
             <input type="number" step="0.1" name="subetapa_valor[]" placeholder="Valor em pontos desta subetapa (deve somar ao total da etapa)">
@@ -152,22 +173,22 @@
             criterioDiv.innerHTML = `
             <h4>Critério de Avaliação</h4>
             <label>Descrição específica do critério</label>
-            <textarea name="criterio_descricao[]" placeholder="Descrição específica do critério"></textarea>
+            <textarea name="criterio_descricao[]" rows="6" placeholder="Descrição específica do critério e justificativa para que tenham recebido essa classificação"></textarea>
 
             <label>Excelente ou acima do esperado</label>
-            <textarea name="criterio_excelente[]" placeholder="Exemplos de respostas excelentes"></textarea>
+            <textarea name="criterio_excelente[]" rows="6" placeholder="Exemplos de respostas excelentes e justificativa para que tenham recebido essa classificação"></textarea>
 
             <label>Bom ou acima do esperado</label>
-            <textarea name="criterio_bom[]" placeholder="Exemplos de respostas boas"></textarea>
+            <textarea name="criterio_bom[]" rows="6" placeholder="Exemplos de respostas boas e justificativa para que tenham recebido essa classificação"></textarea>
 
             <label>Mediano ou aceitável</label>
-            <textarea name="criterio_mediano[]" placeholder="Exemplos de respostas medianas"></textarea>
+            <textarea name="criterio_mediano[]" rows="6" placeholder="Exemplos de respostas medianas e justificativa para que tenham recebido essa classificação"></textarea>
 
             <label>Abaixo do esperado</label>
-            <textarea name="criterio_abaixo[]" placeholder="Exemplos de respostas abaixo do esperado"></textarea>
+            <textarea name="criterio_abaixo[]" rows="6" placeholder="Exemplos de respostas abaixo do esperado e justificativa para que tenham recebido essa classificação"></textarea>
 
             <label>Muito abaixo do esperado</label>
-            <textarea name="criterio_muito_abaixo[]" placeholder="Exemplos de respostas muito abaixo do esperado"></textarea>
+            <textarea name="criterio_muito_abaixo[]" rows="6" placeholder="Exemplos de respostas muito abaixo do esperado e justificativa para que tenham recebido essa classificação"></textarea>
 
             <button type="button" class="remove-button" onclick="this.parentNode.remove()">Remover Critério</button>
         `;
@@ -183,7 +204,7 @@
             const workflowAssociado = form.querySelector('[name="workflow_associado"]').value.trim();
 
             let md = `# Informações Gerais do Trabalho\n\n`;
-            md += `**Objetivo dos Resultados:**\n${objetivoResultados}\n\n`;
+            md += `**Objetivo da Atividade:**\n${objetivoResultados}\n\n`;
             md += `**Audiência Alvo:**\n${audienciaAlvo}\n\n`;
             md += `**Workflow Associado:**\n${workflowAssociado}\n\n`;
 
@@ -202,10 +223,12 @@
 
                 const subetapas = etapa.querySelectorAll('.subsection');
                 subetapas.forEach((subetapa, j) => {
+                    const subtitulo = subetapa.querySelector('[name="subetapa_titulo[]"]').value.trim();
                     const obj = subetapa.querySelector('[name="subetapa_objetivos[]"]').value.trim();
                     const valorSub = subetapa.querySelector('[name="subetapa_valor[]"]').value.trim();
 
                     md += `### Subetapa ${j + 1}\n\n`;
+                    md += `**Título da Subetapa:** ${subtitulo}\n\n`;
                     md += `**Objetivos Gerais:**\n${obj}\n\n`;
                     md += `**Valor em Pontos da Subetapa:** ${valorSub}\n\n`;
 
@@ -249,15 +272,15 @@
             <fieldset>
                 <legend>Informações Gerais do Trabalho</legend>
                 <label>Objetivo dos Resultados</label>
-                <textarea name="objetivo_resultados"
-                    placeholder="Esclarecer para que os resultados serão utilizados"></textarea>
+                <textarea name="objetivo_resultados" rows="6"
+                    placeholder="Esclarecer para que atividade será utilizada"></textarea>
 
                 <label>Audiência Alvo</label>
-                <textarea name="audiencia_alvo"
-                    placeholder="Definir a audiência para a qual a saída é destinada"></textarea>
+                <textarea name="audiencia_alvo" rows="6"
+                    placeholder="Definir a audiência que realizará a atividade"></textarea>
 
                 <label>Workflow Associado</label>
-                <textarea name="workflow_associado"
+                <textarea name="workflow_associado" rows="6"
                     placeholder="Especificar a qual workflow a tarefa faz parte e onde se encaixa"></textarea>
             </fieldset>
 
@@ -265,7 +288,7 @@
             <button type="button" onclick="addEtapa()">Adicionar Etapa</button>
 
             <hr />
-            <button type="button" onclick="salvarComoMarkdown()">Salvar como Markdown</button>
+            <button type="button" onclick="salvarComoMarkdown()">Salvar</button>
         </form>
     </div>
 </body>
